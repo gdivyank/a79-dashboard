@@ -1,11 +1,27 @@
 import { useState } from "react";
-import { createMessage } from "../api/conversation/route";
-const Chatbot = ({ selectedRows }: { selectedRows: any[] }) => {
-  const [messages, setMessages] = useState<any[]>([]);
+import { RowData } from "../types";
+
+// Define types for message and API response
+interface Message {
+  content: string;
+  role: string;
+  message_context?: {
+    tabular_data?: string;
+  };
+}
+
+interface BotResponse {
+  id: number;
+  content: string;
+  message_context?: {tabular_data : string};
+}
+
+const Chatbot = ({ selectedRows }: { selectedRows: RowData[] }) => {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
   const handleSendMessage = async () => {
-    const userMessage = {
+    const userMessage: Message = {
       content: input,
       role: "user",
       message_context: {
@@ -15,12 +31,35 @@ const Chatbot = ({ selectedRows }: { selectedRows: any[] }) => {
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-    const botResponse = await createMessage(userMessage);
-    setMessages((prevMessages) => [...prevMessages, botResponse]);
+    try {
+      // Call the API endpoint
+      const response = await fetch('/api/conversation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userMessage),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const botResponse: BotResponse = await response.json();
+      const botMessage: Message = {
+        content: botResponse.content,
+        role: "bot",
+        message_context: botResponse.message_context,
+      };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
 
     setInput(""); 
   };
-  const handleKeyDown = (e) => {
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSendMessage(); 
     }

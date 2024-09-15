@@ -1,40 +1,42 @@
-export interface MessageCreate {
-  conversation_id?: number;
-  content: string;
-  message_context?: {
-    tabular_data?: string;
-  };
+import { NextResponse } from 'next/server';
+
+// Define types for the data and API requests
+interface TableEntry {
+  name: string;
+  country: string;
+  language: string;
+  games: string;
 }
 
-export interface MessagePublic {
-  created_at?: string;
-  updated_at?: string;
+interface MessageContext {
+  tabular_data?: string;
+}
+
+interface ApiRequestBody {
   content: string;
-  role?: string;
-  conversation_id?: number;
+  message_context?: MessageContext;
+}
+
+interface ApiResponseBody {
   id: number;
-  message_context: {
-    tabular_data?: string;
-  };
+  content: string;
+  message_context: MessageContext;
 }
 
-export const tableData = [
+// Sample data
+const tableData: TableEntry[] = [
   { name: 'John Doe', country: 'USA', language: 'English', games: 'Chess' },
   { name: 'Jane Smith', country: 'UK', language: 'English', games: 'Tennis' },
   { name: 'Carlos Ruiz', country: 'Spain', language: 'Spanish', games: 'Football' },
 ];
 
-// Utility function to find data based on the user's question
-function findAnswerFromTableData(question: string) {
+function findAnswerFromTableData(question: string): string {
   const normalizedQuestion = question.toLowerCase();
   
-  // Check if the question refers to a specific row
   const rowMatch = normalizedQuestion.match(/row (\d+)/);
-  const rowIndex = rowMatch ? parseInt(rowMatch[1], 10) - 1 : null; // Convert to 0-based index
+  const rowIndex = rowMatch ? parseInt(rowMatch[1], 10) - 1 : null;
 
-  // If a specific row is mentioned
   if (rowIndex !== null && rowIndex >= 0 && rowIndex < tableData.length) {
-    // Check which attribute is being asked
     if (normalizedQuestion.includes('name')) {
       return `The name in row ${rowIndex + 1} is ${tableData[rowIndex].name}.`;
     }
@@ -49,7 +51,6 @@ function findAnswerFromTableData(question: string) {
     }
   }
 
-  // Handle general queries about all rows
   if (normalizedQuestion.includes('name')) {
     const names = tableData.map((entry) => entry.name).join(', ');
     return `The names in the table are: ${names}.`;
@@ -70,30 +71,26 @@ function findAnswerFromTableData(question: string) {
   return "Sorry, I couldn't find any relevant data.";
 }
 
-export async function createMessage(message: MessageCreate): Promise<MessagePublic> {
-  const botResponseContent = findAnswerFromTableData(message.content);
+// API Route Handlers
+export async function POST(request: Request) {
+  const { content, message_context }: ApiRequestBody = await request.json();
 
-  // Simulate an API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        id: Math.floor(Math.random() * 1000),
-        content: botResponseContent, // Use the smart response from findAnswerFromTableData
-        message_context: message.message_context || {},
-      });
-    }, 1000);
+  const botResponseContent = findAnswerFromTableData(content);
+
+  return NextResponse.json<ApiResponseBody>({
+    id: Math.floor(Math.random() * 1000),
+    content: botResponseContent,
+    message_context: message_context || {},
   });
 }
 
-export async function readConversation(conversationId: string): Promise<any> {
-  // Simulate fetching conversation
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        name: 'Chat Conversation',
-        id: Number(conversationId),
-        messages: [],
-      });
-    }, 1000);
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const conversationId = url.searchParams.get('conversationId');
+
+  return NextResponse.json({
+    name: 'Chat Conversation',
+    id: Number(conversationId),
+    messages: [],
   });
 }
