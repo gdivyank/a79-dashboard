@@ -2,35 +2,26 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+The project can be run locally using npm run dev command. It is made in typescript and Ag library for tabular view 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scope 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The scope of the project pertains to implementing the table with sort and filter functionality. With respect to the chat feature it involves proper implementation of chat interface. The response of the chat has been added for basic use cases. It is to be considered that chat responses are not developed to handle real and complex scenarios. 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure 
 
-## Learn More
+<img width="266" alt="image" src="https://github.com/user-attachments/assets/8df30419-31c5-4547-bbf8-b893bce4bf46">
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Recording 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+https://github.com/user-attachments/assets/e06d4a79-da1a-403a-bdc2-802f62e938f8
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Page Performance 
+
+<img width="760" alt="image" src="https://github.com/user-attachments/assets/3e9ee65c-9347-469c-a884-123e478fd48e">
+
+
